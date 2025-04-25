@@ -1369,8 +1369,7 @@ RESULTS_HTML = HTML_BASE_START + """
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
-app.secret_key = os.urandom(32)
-
+app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'default-non-secret-key-change-me') # Important: We will set this securely later
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SESSION_PERMANENT'] = False
 app.config['SESSION_USE_SIGNER'] = True
@@ -1778,12 +1777,10 @@ def show_results():
         return redirect(url_for('select_year'))
 
 # --- Main Execution ---
-if __name__ == '__main__':
-    for dir_path in [app.config['UPLOAD_FOLDER'], app.config['SESSION_FILE_DIR']]:
-         if not os.path.exists(dir_path):
-             try: os.makedirs(dir_path); print(f"Created directory: {dir_path}")
-             except OSError as e: print(f"FATAL: Could not create directory {dir_path}: {e}"); exit(1)
-    # Set debug=False for production!
-    app.run(debug=True, host='0.0.0.0', port=5000)
-
-# --- END OF FILE crypto_tax_app_v2.py ---
+# if __name__ == '__main__':  # <--- Comment out this line
+#     for dir_path in [app.config['UPLOAD_FOLDER'], app.config['SESSION_FILE_DIR']]:
+#          if not os.path.exists(dir_path):
+#              try: os.makedirs(dir_path); print(f"Created directory: {dir_path}")
+#              except OSError as e: print(f"FATAL: Could not create directory {dir_path}: {e}"); exit(1)
+#     # Set debug=False for production!
+#     app.run(debug=True, host='0.0.0.0', port=5000) # <--- Comment out this line
